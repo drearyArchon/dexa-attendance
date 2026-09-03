@@ -4,6 +4,7 @@ import { UpdateImageDto } from './dto/update-image.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Image } from './entities/image.entity.js';
+import { User } from '../user/entities/user.entity.js';
 
 @Injectable()
 export class ImageService {
@@ -18,6 +19,13 @@ export class ImageService {
 
   findAll() {
     return `This action returns all image`;
+  }
+
+  findImagesByUser(user_id: string) {
+    return this.imagesRepository
+              .createQueryBuilder('images')
+              .where('userUserId = :id', { id: user_id })
+              .getMany();
   }
 
   findOne(image_id: string) {

@@ -1,8 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 export enum UserRole {
     ADMIN = "admin",
-    EMPLOYEE = "employee"
+    USER = "user"
 }
 
 @Entity()
@@ -22,7 +22,7 @@ export class User {
     @Column({ 
         type: "enum",
         enum: UserRole,
-        default: UserRole.EMPLOYEE 
+        default: UserRole.USER 
     })
     role: UserRole;
 }

@@ -14,4 +14,11 @@ export class AuthController {
     signIn(@Body() userDto: User) {
         return this.authService.signIn(userDto.username, userDto.password);
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Get('role')
+    checkRole(@Request() req: any) {
+        console.log(req.user.user_id);
+        return this.authService.getUserRole(req.user.user_id);
+    }
 }
