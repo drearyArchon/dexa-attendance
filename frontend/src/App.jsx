@@ -5,8 +5,6 @@ import { RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './contexts/auth/AuthProvider'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <AuthProvider>
       <RouterProvider router={router} />

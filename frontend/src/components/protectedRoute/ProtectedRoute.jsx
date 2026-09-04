@@ -11,7 +11,10 @@ const ProtectedRoute = ({
     const { userData } = useAuth();
     const isAuthenticated = !!userData;
 
-    if (isAuthenticated && allowedRoles.includes(userData.role)) {
+    if (isAuthenticated 
+        && allowedRoles.includes(userData.role)
+        && (userData.exp * 1000 > Date.now())
+    ) {
         return <>{children}</>;
     }
 

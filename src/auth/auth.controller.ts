@@ -1,7 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { User } from '../user/entities/user.entity.js';
-import { AuthGuard } from './auth.guard.js';
 import { Public } from './auth.constants.js';
 
 @Controller('auth')
@@ -18,7 +17,6 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Get('role')
     checkRole(@Request() req: any) {
-        console.log(req.user.user_id);
         return this.authService.getUserRole(req.user.user_id);
     }
 }
