@@ -1,5 +1,5 @@
 :root {
-  --text: #6b6375;
+  --text: #08060d;
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
@@ -24,7 +24,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  float:center;
+  
   @media (max-width: 1024px) {
     font-size: 16px;
   }

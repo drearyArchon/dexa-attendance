@@ -1,0 +1,12 @@
+#navbar{
+	padding-top:40px;
+	height:100px;
+	padding:25px;
+	float:top;
+	background-color:#cf2e2e;
+	color:#ffffff;
+}
+
+#navbar-center{
+    align-items: left;
+}

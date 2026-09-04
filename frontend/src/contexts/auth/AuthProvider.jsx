@@ -51,28 +51,6 @@ export const AuthProvider = ({ children }) => {
         return JSON.parse(jsonPayload);
     }
 
-    const sendRequest = async (method, endpoint, headers, body) => {
-        try {
-            await axios({
-                method: method,
-                url: BACKEND_URL + endpoint,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    ...headers
-                },
-                data: body
-            }).then((response) => {
-                return response.data;
-            }).catch((err) => {
-                console.log(err);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-
-        return {};
-    }
-
     const logout = () => {
         setToken("");
         setUserData({});
@@ -81,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ userData, sendRequest, login, logout }}>
+        <AuthContext.Provider value={{ token, userData, login, logout }}>
             {children}
         </AuthContext.Provider>
     )
