@@ -83,6 +83,7 @@ const Dashboard = () => {
 
     const handleSubmitUpload = () => {
         uploadImage();
+        setSelectedImage(null);
         setUploadDialogOpen(false);
     }
 
@@ -105,7 +106,9 @@ const Dashboard = () => {
                 {
                     imageList.map((image) => 
                         <div className="grid grid-cols-4 grid-rows-4 space-x-1">
-                            <div className="border border-stone-400 bg-white flex-grow row-span-4 col-span-3">{image.image_id}</div>
+                            <div className="border border-stone-400 bg-white flex-grow row-span-4 col-span-3">
+                                <img src={image.url} id={image.image_id} />
+                            </div>
                             <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localDate}</div>
                             <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localTime}</div>
                             <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">IN</div>

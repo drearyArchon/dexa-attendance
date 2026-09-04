@@ -6,7 +6,7 @@ export class Image {
     @PrimaryGeneratedColumn()
     image_id: string;
 
-    @CreateDateColumn({ utc: true })
+    @CreateDateColumn({ utc: false })
     timestamp: Date;
 
     @Column()

@@ -54,8 +54,8 @@ const AdminPage = () => {
             const processedImageList = response.data.map((el) => {
                 return {
                     ...el,
-                    localDate: new Date(el.timestamp).toLocaleDateString(),
-                    localTime: new Date(el.timestamp).toLocaleTimeString()
+                    localDate: new Date(el.timestamp).toDateString(),
+                    localTime: new Date(el.timestamp).toTimeString()
                 }
             });
             setUserImageList(processedImageList);

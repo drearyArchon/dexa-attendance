@@ -36,7 +36,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       password: process.env.DB_PASSWORD,
       database: process.env.DATABASE,
       entities: [User, Image, Attendance],
-      timezone: 'Z',
+      timezone: '+07:00',
       dateStrings: false,
       synchronize: true // TODO: Set false on PRD
     })
