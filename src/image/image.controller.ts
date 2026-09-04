@@ -22,14 +22,14 @@ export class ImageController {
   @UserAccess()
   @HttpCode(HttpStatus.OK)
   @Get()
-  findUserImages(@Request() req: any, @Query('start') start: Date, @Query('end') end: Date) {
-    return this.imageService.findImagesByUser(req.user.user_id, start, end);
+  findUserImages(@Request() req: any) {
+    return this.imageService.findImagesByUser(req.user.user_id);
   }
 
   @HttpCode(HttpStatus.OK)
   @Get(':user_id')
-  findImagesByUser(@Param('user_id') user_id: string, @Query('start') start: Date, @Query('end') end: Date) {
-    return this.imageService.findImagesByUser(user_id, start, end);
+  findImagesByUser(@Param('user_id') user_id: string) {
+    return this.imageService.findImagesByUser(user_id);
   }
 
   // @HttpCode(HttpStatus.OK)

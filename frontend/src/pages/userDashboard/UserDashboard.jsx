@@ -4,12 +4,13 @@ import axios from "axios";
 import { IMAGES_ENDPOINT } from "./constants";
 import { GREEN_BUTTON_STYLE, RED_BUTTON_STYLE } from "../adminPage/style";
 import DialogPrompt from "../../components/dialog/DialogPrompt";
-import InputDate from "../../components/inputDate/InputDate";
 import InputImage from "../../components/inputImage/InputImage";
 import ImageViewer from "../../components/imageViewer/ImageViewer";
+import DigitalClock from "../../components/clocl/DigitalClock";
 
 const Dashboard = () => {
     const [imageList, setImageList] = useState([]);
+    const [currentStatus, setCurrentStatus] = useState("")
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -39,6 +40,7 @@ const Dashboard = () => {
                     localTime: new Date(el.timestamp).toLocaleTimeString().replaceAll('.',':')
                 }
             });
+            setCurrentStatus(processedImageList[0].status)
             setImageList(processedImageList);
         }).catch((err) => {
             console.log(err);
@@ -99,15 +101,21 @@ const Dashboard = () => {
         <div className="m-4 p-6 min-h-[90%] min-w-[60%] rounded-lg bg-white shadow-sm space-y-4">
             <h1>Dashboard</h1>
             <div className="flex space-x-1">
-                <button onClick={handleUpload} className={`${GREEN_BUTTON_STYLE} flex-none`}>Upload Image</button>
-                <InputDate fieldName="dateStart" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
-                <InputDate fieldName="dateEnd" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
+                <button 
+                    onClick={handleUpload} 
+                    className={`${currentStatus === 'in' ? RED_BUTTON_STYLE : GREEN_BUTTON_STYLE } flex-none`}
+                >
+                    {currentStatus === 'in' ? "Clock Out" : "Clock In"}
+                </button>
+                <div className="border border-stone-400 rounded-md flex-grow">
+                    <DigitalClock />
+                </div>
             </div>
             <ImageViewer imageList={imageList} />
             { uploadDialogOpen && (
                 <DialogPrompt>
                     <div>
-                        <h2 className="text-xl font-bold text-slate-800">Upload New Image</h2>
+                        <h2 className="text-xl font-bold text-slate-800">Upload New Image to {currentStatus === 'in' ? "Clock Out" : "Clock In"}</h2>
                     </div>
 
                     <div>
