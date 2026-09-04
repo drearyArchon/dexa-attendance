@@ -35,6 +35,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       password: process.env.DB_PASSWORD,
       database: process.env.DATABASE,
       entities: [User, Image],
+      timezone: 'Z',
+      dateStrings: false,
       synchronize: true
     })
   ],

@@ -13,30 +13,16 @@ export class ImageService {
     private imagesRepository: Repository<Image>
   ) {}
 
-  create(createImageDto: CreateImageDto) {
-    return 'This action adds a new image';
+  async create(createImageDto: CreateImageDto) {
+    return await this.imagesRepository.save(createImageDto);
   }
 
-  findAll() {
-    return `This action returns all image`;
-  }
-
-  findImagesByUser(user_id: string) {
-    return this.imagesRepository
+  async findImagesByUser(user_id: string, start: Date, end: Date) {
+    return await this.imagesRepository
               .createQueryBuilder('images')
               .where('userUserId = :id', { id: user_id })
+              .andWhere('timestamp BETWEEN :start AND :end', { start: start, end: end })
+              .addOrderBy("timestamp", "DESC")
               .getMany();
-  }
-
-  findOne(image_id: string) {
-    return `This action returns a #${image_id} image`;
-  }
-
-  update(image_id: string, updateImageDto: UpdateImageDto) {
-    return `This action updates a #${image_id} image`;
-  }
-
-  remove(image_id: string) {
-    return `This action removes a #${image_id} image`;
   }
 }

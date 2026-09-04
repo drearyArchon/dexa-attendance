@@ -13,7 +13,17 @@ const Dashboard = () => {
     const { token, userData } = useAuth();
 
     const fetchImages = () => {
+        let date = new Date();
+        // Day 1 00:00 of this month
+        let firstDay = new Date(date.getFullYear(), date.getMonth(), 0).toISOString();
+        // Day 1 00:00 of next month
+        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString(); 
+
         axios.get(IMAGES_ENDPOINT, {
+            params: {
+                start: firstDay,
+                end: lastDay
+            },
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'

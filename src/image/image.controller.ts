@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Request, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Request, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ImageService } from './image.service.js';
 import { CreateImageDto } from './dto/create-image.dto.js';
 import { UpdateImageDto } from './dto/update-image.dto.js';
@@ -15,38 +15,37 @@ export class ImageController {
     return this.imageService.create(createImageDto);
   }
 
-  @HttpCode(HttpStatus.OK)
-  @Get('/all')
-  findAll() {
-    return this.imageService.findAll();
-  }
-
   @UserAccess()
   @HttpCode(HttpStatus.OK)
   @Get()
-  findUserImages(@Request() req: any) {
-    console.log(req.user.user_id);
-    return this.imageService.findImagesByUser(req.user.user_id);
+  findUserImages(@Request() req: any, @Query('start') start: Date, @Query('end') end: Date) {
+    return this.imageService.findImagesByUser(req.user.user_id, start, end);
   }
 
-  @UserAccess()
-  @HttpCode(HttpStatus.OK)
-  @Get(':image_id')
-  findOne(@Param('image_id') image_id: string) {
-    return this.imageService.findOne(image_id);
-  }
+  // @HttpCode(HttpStatus.OK)
+  // @Get('/all')
+  // findAll() {
+  //   return this.imageService.findAll();
+  // }
 
-  @UserAccess()
-  @HttpCode(HttpStatus.OK)
-  @Put(':image_id')
-  update(@Param('image_id') image_id: string, @Body() updateImageDto: UpdateImageDto) {
-    return this.imageService.update(image_id, updateImageDto);
-  }
+  // @UserAccess()
+  // @HttpCode(HttpStatus.OK)
+  // @Get(':image_id')
+  // findOne(@Param('image_id') image_id: string) {
+  //   return this.imageService.findOne(image_id);
+  // }
 
-  @UserAccess()
-  @HttpCode(HttpStatus.OK)
-  @Delete(':image_id')
-  remove(@Param('image_id') image_id: string) {
-    return this.imageService.remove(image_id);
-  }
+  // @UserAccess()
+  // @HttpCode(HttpStatus.OK)
+  // @Put(':image_id')
+  // update(@Param('image_id') image_id: string, @Body() updateImageDto: UpdateImageDto) {
+  //   return this.imageService.update(image_id, updateImageDto);
+  // }
+
+  // @UserAccess()
+  // @HttpCode(HttpStatus.OK)
+  // @Delete(':image_id')
+  // remove(@Param('image_id') image_id: string) {
+  //   return this.imageService.remove(image_id);
+  // }
 }
