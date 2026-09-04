@@ -35,4 +35,12 @@ export class ImageService {
               .orderBy("timestamp", "DESC")
               .getMany();
   }
+
+  async deleteUserImages(user_id:string) {
+    return await this.imagesRepository
+              .createQueryBuilder('images')
+              .delete()
+              .where('userUserId = :id', { id: user_id })
+              .execute();
+  }
 }

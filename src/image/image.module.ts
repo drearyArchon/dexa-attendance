@@ -35,5 +35,6 @@ const uploadDir = join(process.cwd(), 'resources');
   ],
   controllers: [ImageController],
   providers: [ImageService],
+  exports: [ImageService]
 })
 export class ImageModule {}

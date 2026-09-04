@@ -4,12 +4,14 @@ import { UpdateUserDto } from './dto/update-user.dto.js';
 import { User, UserRole } from './entities/user.entity.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { ImageService } from '../image/image.service.js';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private imageService: ImageService
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -33,7 +35,9 @@ export class UserService {
   }
 
   async remove(user_id: string): Promise<DeleteResult> {
-    return await this.usersRepository.delete(user_id);
+    return await this.imageService.deleteUserImages(user_id).then(() => {
+      return this.usersRepository.delete(user_id);
+    });
   }
 
   async checkAdminCredentials(username: string): Promise<boolean> {
