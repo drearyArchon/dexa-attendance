@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/auth/AuthProvider";
 import router from "../../router";
+import { GREEN_BUTTON_STYLE } from "../adminPage/style";
 
 const LoginPage = () => {
     const { login } = useAuth();
@@ -16,9 +17,9 @@ const LoginPage = () => {
     }
 
     return (
-        <div class="bg-white border border-stone-200 rounded-xl shadow-sm p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8 gap-6">
-                <form onSubmit={handleSubmit} class="space-y-2">
+        <div class="">
+            <div class="grid grid-cols-3 grid-rows-3 mt-8 gap-6">
+                <form onSubmit={handleSubmit} class="col-start-2 row-start-2 min-w-[220px] bg-white border border-stone-200 rounded-xl shadow-sm m-4 p-6 space-y-2">
                     <div class="space-y-1">
                         <label for="username" class="block mb-1 text-sm font-semibold antialiased text-stone-800">User Portal</label>
                         <input id="username" type="text" required placeholder="Username" class="w-full aria-disabled:cursor-not-allowed outline-none focus:outline-none text-stone-800 placeholder:text-stone-600/60 ring-transparent border border-stone-200 transition-all ease-in disabled:opacity-50 disabled:pointer-events-none select-none text-sm py-2 px-2.5 ring shadow-sm bg-white rounded-lg duration-100 hover:border-stone-300 hover:ring-none focus:border-stone-400 focus:ring-none peer" />
@@ -26,7 +27,7 @@ const LoginPage = () => {
                     <div class="space-y-1">
                         <input id="password" type="password" required placeholder="Password" class="w-full aria-disabled:cursor-not-allowed outline-none focus:outline-none text-stone-800 placeholder:text-stone-600/60 ring-transparent border border-stone-200 transition-all ease-in disabled:opacity-50 disabled:pointer-events-none select-none text-sm py-2 px-2.5 ring shadow-sm bg-white rounded-lg duration-100 hover:border-stone-300 hover:ring-none focus:border-stone-400 focus:ring-none peer" />
                     </div>
-                    <button type="submit">Login</button>
+                    <button type="submit" className={GREEN_BUTTON_STYLE}>Login</button>
                 </form>
             </div>
         </div>

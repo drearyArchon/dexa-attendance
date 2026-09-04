@@ -1,6 +1,6 @@
 export const USER_ROLES = {
-    ADMIN: "ADMIN",
-    USER: "USER"
+    ADMIN: "admin",
+    USER: "user"
 }
 
 export const ALLOW_ADMIN = ["admin"];

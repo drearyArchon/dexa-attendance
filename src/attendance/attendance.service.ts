@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Attendance } from './entities/attendance.model.js';
-import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
 
 @Injectable()
 export class AttendanceService {
