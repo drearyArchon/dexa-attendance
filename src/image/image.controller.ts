@@ -11,14 +11,12 @@ export class ImageController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  async create(@Request() req: any, @UploadedFile() file: any) {
-    this.imageService.create(req.user, file.filename)
-      .then((img) => {
-        const fileUrl = `http://localhost:31000/images/${file.filename}`;
-        return {
-          url: fileUrl,
-        };
-      })
+  async create(@Request() req: any, @UploadedFile() file: any): Promise<{ url: string}> {
+    const fileUrl = `http://localhost:3100/img/${file.filename}`
+    await this.imageService.create(req.user, fileUrl);
+    return {
+        url: fileUrl,
+      }
   }
 
   @UserAccess()

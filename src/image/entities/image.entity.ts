@@ -9,9 +9,8 @@ export class Image {
     @CreateDateColumn({ utc: true })
     timestamp: Date;
 
-    // TODO: Make this non-nullable in PRD
-    @Column({ nullable: true })
-    filename: string;
+    @Column()
+    url: string;
 
     @ManyToOne((type) => User)
     user: User;

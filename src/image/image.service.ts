@@ -12,8 +12,8 @@ export class ImageService {
     private imagesRepository: Repository<Image>
   ) {}
 
-  async create(user: User, filename: string) {
-    return await this.imagesRepository.save(new CreateImageDto({ user: user, filename: filename}));
+  async create(user: User, url: string) {
+    return await this.imagesRepository.save({ user: user, url: url});
   }
 
   async findImagesByUser(user_id: string, start: Date, end: Date) {
