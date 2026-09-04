@@ -15,13 +15,13 @@ async function bootstrap() {
   }
   app.use('/img', express.static(join(process.cwd(), 'resources')));
   app.enableCors({
-  origin: [
-    'http://localhost:5173',
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  credentials: true, // Required to allow cookies/headers
-});
+    origin: [
+      'http://localhost:5173',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: true, // Required to allow cookies/headers
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();

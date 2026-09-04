@@ -5,10 +5,12 @@ import { IMAGES_ENDPOINT } from "./constants";
 import { GREEN_BUTTON_STYLE, RED_BUTTON_STYLE } from "../adminPage/style";
 import DialogPrompt from "../../components/dialog/DialogPrompt";
 import InputDate from "../../components/inputDate/InputDate";
+import InputImage from "../../components/inputImage/InputImage";
 
 const Dashboard = () => {
     const [imageList, setImageList] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
     const { token, userData } = useAuth();
 
@@ -36,7 +38,6 @@ const Dashboard = () => {
                     localTime: new Date(el.timestamp).toLocaleTimeString()
                 }
             });
-            console.log(processedImageList);
             setImageList(processedImageList);
         }).catch((err) => {
             console.log(err);
@@ -44,12 +45,13 @@ const Dashboard = () => {
     }
 
     const uploadImage = () => {
-        axios.post(IMAGES_ENDPOINT, {
-            user: userData
-        }, {
+        const formData = new FormData();
+        formData.append('file', selectedImage);
+
+        axios.post(IMAGES_ENDPOINT, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             },
         }).then((response) => {
             fetchImages();
@@ -57,6 +59,18 @@ const Dashboard = () => {
             console.log(err);
         });
     }
+
+    useEffect(() => {
+        try {
+            fetchImages();
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log(selectedDate);
+    }, [selectedDate])
 
     const handleDateSelector = (event) => {
         console.log(event.target.value);
@@ -72,20 +86,16 @@ const Dashboard = () => {
         setUploadDialogOpen(false);
     }
 
-    useEffect(() => {
-        try {
-            fetchImages();
-        } catch (error) {
-            console.log(error);
+    const handleFileSelect = (event) => {
+        if (event.target.files[0]) {
+            console.log(event.target.files);
+            setSelectedImage(event.target.files[0]);
         }
-    }, []);
+    }
 
-    useEffect(() => {
-        console.log(selectedDate);
-    }, [selectedDate])
     return (
         <div className="m-4 p-6 min-h-[90%] min-w-[60%] rounded-lg bg-white shadow-sm space-y-4">
-            <h1 classname="">Dashboard</h1>
+            <h1>Dashboard</h1>
             <div className="flex space-x-1">
                 <button onClick={handleUpload} className={`${GREEN_BUTTON_STYLE} flex-none`}>Upload Image</button>
                 <InputDate fieldName="dateStart" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
@@ -105,13 +115,31 @@ const Dashboard = () => {
             </div>
             { uploadDialogOpen && (
                 <DialogPrompt>
-                    <h2 className="text-xl font-bold text-slate-800">Upload New Image</h2>
-                    <input id="imageUpload" type="image" />
-                    <div classname="px-4 py-4 flex flex-row-reverse space-x-2">
+                    <div>
+                        <h2 className="text-xl font-bold text-slate-800">Upload New Image</h2>
+                    </div>
+
+                    <div>
+                        {selectedImage && <img 
+                            alt="Not Found"
+                            width={"250px"}
+                            src={URL.createObjectURL(selectedImage)}
+                        />
+                        }
+                        <InputImage onChange={handleFileSelect} />
+                        {selectedImage && 
+                            <p>{Math.round(selectedImage.size / 1024)} KB</p>
+                        }
+                    </div>                
+                    <div className="flex flex-row-reverse space-x-2">
                         <button onClick={() => setUploadDialogOpen(false)} className={RED_BUTTON_STYLE}>
                             Cancel
                         </button>
-                        <button onClick={handleSubmitUpload} className={GREEN_BUTTON_STYLE}>
+                        <button 
+                            onClick={handleSubmitUpload} 
+                            className={GREEN_BUTTON_STYLE}
+                            disabled={selectedImage ? false : true}
+                        >
                             Upload
                         </button>
                     </div>
