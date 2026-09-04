@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity.js';
 import { Image } from './image/entities/image.entity.js';
 import { ConfigModule } from '@nestjs/config';
+import { Attendance } from './attendance/entities/attendance.model.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -34,10 +35,10 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DATABASE,
-      entities: [User, Image],
-      timezone: 'Z',
+      entities: [User, Image, Attendance],
+      timezone: 'local',
       dateStrings: false,
-      synchronize: true
+      synchronize: true // TODO: Set false on PRD
     })
   ],
   controllers: [AppController],

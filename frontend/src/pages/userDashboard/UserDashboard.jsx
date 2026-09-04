@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/auth/AuthProvider";
 import axios from "axios";
 import { IMAGES_ENDPOINT } from "./constants";
-import { BUTTON_STYLE, GREEN_BUTTON_STYLE, RED_BUTTON_STYLE } from "../adminPage/style";
+import { GREEN_BUTTON_STYLE, RED_BUTTON_STYLE } from "../adminPage/style";
 import DialogPrompt from "../../components/dialog/DialogPrompt";
 import InputDate from "../../components/inputDate/InputDate";
 
@@ -29,7 +29,15 @@ const Dashboard = () => {
                 'Content-Type': 'application/json'
             },
         }).then((response) => {
-            setImageList(response.data);
+            const processedImageList = response.data.map((el) => {
+                return {
+                    ...el,
+                    localDate: new Date(el.timestamp).toLocaleDateString(),
+                    localTime: new Date(el.timestamp).toLocaleTimeString()
+                }
+            });
+            console.log(processedImageList);
+            setImageList(processedImageList);
         }).catch((err) => {
             console.log(err);
         });
@@ -75,15 +83,26 @@ const Dashboard = () => {
     useEffect(() => {
         console.log(selectedDate);
     }, [selectedDate])
-
     return (
-        <div className="m-4 p-4 w-4/5 min-h-[90%] min-w-[60%] max-w-[90%] rounded-lg bg-[#cf2e2e] shadow-sm">
-            <h1>Dashboard</h1>
-            <button onClick={handleUpload} className={GREEN_BUTTON_STYLE}>Upload Image</button>
-            <InputDate fieldName="date" value={selectedDate} onChange={handleDateSelector} />
-            {
-                imageList.map((image) => <p>TEST {image.image_id} {image.timestamp}</p>)
-            }
+        <div className="m-4 p-6 min-h-[90%] min-w-[60%] rounded-lg bg-white shadow-sm space-y-4">
+            <h1 classname="">Dashboard</h1>
+            <div className="flex space-x-1">
+                <button onClick={handleUpload} className={`${GREEN_BUTTON_STYLE} flex-none`}>Upload Image</button>
+                <InputDate fieldName="dateStart" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
+                <InputDate fieldName="dateEnd" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
+            </div>
+            <div id="imageListView" className="space-y-2 grid sm:grid-cols-1">
+                {
+                    imageList.map((image) => 
+                        <div className="grid grid-cols-4 grid-rows-4 space-x-1">
+                            <div className="border border-stone-400 bg-white flex-grow row-span-4 col-span-3">{image.image_id}</div>
+                            <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localDate}</div>
+                            <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localTime}</div>
+                            <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">IN</div>
+                        </div>
+                    )
+                }
+            </div>
             { uploadDialogOpen && (
                 <DialogPrompt>
                     <h2 className="text-xl font-bold text-slate-800">Upload New Image</h2>

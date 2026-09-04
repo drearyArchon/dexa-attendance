@@ -1,7 +1,33 @@
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../../user/entities/user.entity.js";
+import { Image } from "../../image/entities/image.entity.js";
+
+export enum AttendanceStatus {
+    IN = "in",
+    OUT = "out"
+}
+
+@Entity()
 export class Attendance {
-    user_id: string;
+    @PrimaryGeneratedColumn()
+    attendance_id: string;
+
+    @Column()
     date: Date;
-    in: Date;
-    out: Date;
-    total_hours: number;
+
+    @Column()
+    timestamp: Date;
+
+    @Column({
+        type: "enum",
+        enum: AttendanceStatus,
+    })
+    status: AttendanceStatus;
+
+    @ManyToOne(() => User)
+    user: User;
+
+    @OneToOne(() => Image)
+    @JoinColumn()
+    image: Image;
 }

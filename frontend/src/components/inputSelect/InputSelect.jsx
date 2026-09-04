@@ -1,8 +1,8 @@
 import { INPUT_SELECT_STYLE } from "./style";
 
-const InputSelect = ({ fieldName, value, onChange, options, isRequired=true, isDisabled=false, label=null }) => {
+const InputSelect = ({ fieldName, value, onChange, options, style=null, optionStyle=null, isRequired=true, isDisabled=false, label=null }) => {
     return (
-        <div>
+        <div className={style}>
             {label && <label for={fieldName} class="block mb-1 text-sm font-semibold antialiased text-stone-800">{label}</label>}
             <select 
                 id={fieldName} 
@@ -10,10 +10,10 @@ const InputSelect = ({ fieldName, value, onChange, options, isRequired=true, isD
                 disabled={isDisabled} 
                 value={value} 
                 onChange={onChange} 
-                className={INPUT_SELECT_STYLE}
+                className={`${INPUT_SELECT_STYLE}`}
             >
                 {options.map((option) => 
-                    <option value={option.value}>{option.label}</option>
+                    <option value={option.value} className={`text-stone-800 ${optionStyle}`}>{option.label}</option>
                 )}
             </select>
         </div>
