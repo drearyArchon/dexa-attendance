@@ -6,6 +6,7 @@ import { GREEN_BUTTON_STYLE, RED_BUTTON_STYLE } from "../adminPage/style";
 import DialogPrompt from "../../components/dialog/DialogPrompt";
 import InputDate from "../../components/inputDate/InputDate";
 import InputImage from "../../components/inputImage/InputImage";
+import ImageViewer from "../../components/imageViewer/ImageViewer";
 
 const Dashboard = () => {
     const [imageList, setImageList] = useState([]);
@@ -34,8 +35,8 @@ const Dashboard = () => {
             const processedImageList = response.data.map((el) => {
                 return {
                     ...el,
-                    localDate: new Date(el.timestamp).toLocaleDateString(),
-                    localTime: new Date(el.timestamp).toLocaleTimeString()
+                    localDate: new Date(el.timestamp).toDateString(),
+                    localTime: new Date(el.timestamp).toLocaleTimeString().replaceAll('.',':')
                 }
             });
             setImageList(processedImageList);
@@ -102,20 +103,7 @@ const Dashboard = () => {
                 <InputDate fieldName="dateStart" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
                 <InputDate fieldName="dateEnd" value={selectedDate} onChange={handleDateSelector} style="flex-grow" />
             </div>
-            <div id="imageListView" className="space-y-2 grid sm:grid-cols-1">
-                {
-                    imageList.map((image) => 
-                        <div className="grid grid-cols-4 grid-rows-4 space-x-1">
-                            <div className="border border-stone-400 bg-white flex-grow row-span-4 col-span-3">
-                                <img src={image.url} id={image.image_id} />
-                            </div>
-                            <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localDate}</div>
-                            <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localTime}</div>
-                            <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">IN</div>
-                        </div>
-                    )
-                }
-            </div>
+            <ImageViewer imageList={imageList} />
             { uploadDialogOpen && (
                 <DialogPrompt>
                     <div>

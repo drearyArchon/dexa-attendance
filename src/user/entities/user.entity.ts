@@ -16,8 +16,13 @@ export class User {
     })
     username: string;
 
-    @Column("varchar", { length: 255})
+    @Column("varchar", { 
+        length: 255
+    })
     password: string;
+
+    @Column({ default: "http://localhost:3100/img/DefaultProfile.jpg" })
+    profileImageUrl: string; 
 
     @Column({ 
         type: "enum",

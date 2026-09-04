@@ -4,13 +4,11 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ImageModule } from './image/image.module.js';
-import { AttendanceModule } from './attendance/attendance.module.js';
 import { UserModule } from './user/user.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity.js';
 import { Image } from './image/entities/image.entity.js';
 import { ConfigModule } from '@nestjs/config';
-import { Attendance } from './attendance/entities/attendance.model.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -26,7 +24,6 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ConfigModule.forRoot(),
     UserModule,
     ImageModule,
-    AttendanceModule,
     AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -35,7 +32,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DATABASE,
-      entities: [User, Image, Attendance],
+      entities: [User, Image],
       timezone: '+07:00',
       dateStrings: false,
       synchronize: true // TODO: Set false on PRD
