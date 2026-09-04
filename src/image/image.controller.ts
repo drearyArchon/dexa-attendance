@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Request, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Request, HttpCode, HttpStatus, Query, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ImageService } from './image.service.js';
-import { CreateImageDto } from './dto/create-image.dto.js';
-import { UpdateImageDto } from './dto/update-image.dto.js';
 import { UserAccess } from '../auth/auth.constants.js';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('images')
 export class ImageController {
@@ -11,8 +10,15 @@ export class ImageController {
   @UserAccess()
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  create(@Body() createImageDto: CreateImageDto) {
-    return this.imageService.create(createImageDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(@Request() req: any, @UploadedFile() file: any) {
+    this.imageService.create(req.user, file.filename)
+      .then((img) => {
+        const fileUrl = `http://localhost:31000/images/${file.filename}`;
+        return {
+          url: fileUrl,
+        };
+      })
   }
 
   @UserAccess()
@@ -20,6 +26,12 @@ export class ImageController {
   @Get()
   findUserImages(@Request() req: any, @Query('start') start: Date, @Query('end') end: Date) {
     return this.imageService.findImagesByUser(req.user.user_id, start, end);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':user_id')
+  findImagesByUser(@Param('user_id') user_id: string, @Query('start') start: Date, @Query('end') end: Date) {
+    return this.imageService.findImagesByUser(user_id, start, end);
   }
 
   // @HttpCode(HttpStatus.OK)
