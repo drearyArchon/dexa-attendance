@@ -7,15 +7,17 @@ import InputSelect from "../../components/inputSelect/InputSelect";
 import { BUTTON_STYLE, GREEN_BUTTON_STYLE, RED_BUTTON_STYLE } from "./style";
 import { EMPTY_USER, roleOptions, USERS_ENDPOINT } from "./constants";
 import { IMAGES_ENDPOINT } from "../userDashboard/constants";
+import profile from '../../assets/Profile.jpg'
 
 const AdminPage = () => {
     const [userList, setUserList] = useState([]);
     const [userImageList, setUserImageList] = useState([]);
-    const [usernameList, setUsernameList] = useState([]);
+    // const [usernameList, setUsernameList] = useState([]);
     const [selectedUser, setSelectedUser] = useState(EMPTY_USER)
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [viewDialogOpen, setViewDialogOpen] = useState(false);
     const { token } = useAuth();
 
     const fetchUsers = () => {
@@ -33,8 +35,17 @@ const AdminPage = () => {
         });
     };
 
-    const fetchUserImages = () => {
+    const fetchUserImages = (user_id) => {
+        const date = new Date();
+        // Day 1 00:00 of this month
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 0).toISOString();
+        // Day 1 00:00 of next month
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1).toISOString(); 
         axios.get(IMAGES_ENDPOINT + `/${selectedUser.user_id}`, {
+            params: {
+                start: firstDay,
+                end: lastDay
+            },
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -106,14 +117,6 @@ const AdminPage = () => {
         }
     }, []);
 
-    useEffect(() => {
-        try {
-            fetchUserImages();
-        } catch (error) {
-            console.log(error);
-        }
-    }, [selectedUser])
-
     const handleChange = (event) => {
         setSelectedUser((prevState) => ({
             ...prevState,
@@ -129,6 +132,12 @@ const AdminPage = () => {
     const handleSumbitCreate = () => {
         createUser();
         setCreateDialogOpen(false);
+    }
+
+    const handleView = (user) => {
+        setSelectedUser(user);
+        fetchUserImages();
+        setViewDialogOpen(true);
     }
 
     const handleEdit = (user) => {
@@ -156,68 +165,41 @@ const AdminPage = () => {
             <h1>Administration</h1>
             <div className="flex space-x-1">
                 <button onClick={handleAddNewUser} className={`${GREEN_BUTTON_STYLE} flex-none`}>Add New User</button>
-                <InputSelect 
+                {/* <InputSelect 
                     fieldName="username" 
                     isRequired
                     style="flex-grow"
                     value={selectedUser.username} 
                     onChange={e => handleChange(e)} 
                     options={usernameList}
-                />
+                /> */}
             </div>
-            <div align="center">
-                {/* grid 4 columns, actions is split into two colums with Edit and Delete. Use rounded borders on those to make them a single pill  */}
-                <div className="grid grid-cols-2 grid-rows-3">
-                    <div className="grid grid-cols-4">
-                        <div>{selectedUser.user_id}</div>
-                        <div>{selectedUser.username}</div>
-                        <div>{selectedUser.password}</div>
-                        <div>{selectedUser.role}</div>
-                    </div>
-
-                    <div>
-                        {/* Attendance Logs */}
-                        { userImageList.map((image) => 
-                            <div className="rounded-full border border-stone-800 text-blue-600">
-                                {/* Linked to Images */}
-                                {image.localDate} {image.localTime}
+            <div className="center grid grid-cols-1 md:grid-cols-2">
+                {
+                    userList.map((user) => 
+                        <div className="m-4 p-4 space-x-1 space-y-1 grid grid-cols-2 grid-rows-5 border border-stone-400 bg-white rounded-xl">
+                            <div className="border border-stone-400 bg-white flex-grow col-span-1 row-span-4">
+                                <img src={profile} alt="Profile Picture" />
                             </div>
-                        )}
-                    </div>
+                            <div className="text-left space-x-2 space-y-2 col-span-1 row-span-4 grid grid-cols-2 grid-rows-4">
+                                <div className="text-bold">User ID</div>
+                                <div>{user.user_id}</div>
+                                <div>Username</div>
+                                <div>{user.username}</div>
+                                <div>Password</div>
+                                <div>{user.password}</div>
+                                <div>Role</div>
+                                <div>{user.role.toUpperCase()}</div>
+                            </div>
 
-
-                    <div className="grid grid-cols-2 flex-none">
-                        <button className="w-16 h-8 border border-green-400 bg-green-400 text-white rounded-s-xl flex-none" onClick={() => handleEdit(selectedUser)}>Edit</button>
-                        <button className="w-16 h-8 border border-red-400 bg-red-400 text-white rounded-e-xl flex-none" onClick={() => handleDelete(selectedUser)}>Delete</button>
-                    </div>
-                </div>
-                {/* <table>
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Role</th>
-                            <th colspam="2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    { userList.map((user) => 
-                        <tr key={user.user_id}>
-                            <td>{user.user_id}</td>
-                            <td>{user.username}</td>
-                            <td>{user.password}</td>
-                            <td>{user.role}</td>
-                            <td>
-                                <div classname="border border-stone-200 rounded-full">
-                                    <button onClick={() => handleEdit(user)}>Edit</button>
-                                </div>
-                            </td>
-                            <td><button onClick={() => handleDelete(user)}>Delete</button></td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table> */}
+                            <div className="col-span-2 grid grid-cols-3 flex-none">
+                                <button className="border border-blue-400 bg-blue-400 text-white rounded-s-xl flex-none" onClick={() => handleView(user)}>View</button>
+                                <button className="border border-green-400 bg-green-400 text-white flex-none" onClick={() => handleEdit(user)}>Edit</button>
+                                <button className={`border ${user.role === "admin" ? "border-stone-400 bg-stone-400" : "border-red-400 bg-red-400"} text-white rounded-e-xl flex-none`} disabled={user.role === "admin"} onClick={() => handleDelete(user)}>Delete</button>
+                            </div>
+                        </div>
+                    )
+                }
             </div>
             { createDialogOpen && (
                 <DialogPrompt>
@@ -227,12 +209,12 @@ const AdminPage = () => {
                         <InputField fieldName="password" isRequired value={selectedUser.password} onChange={e => handleChange(e)} label="Password" />
                         <InputSelect fieldName="role" isDisabled value={selectedUser.role} onChange={e => handleChange(e)} label="Role" options={roleOptions} />
                     </div>
-                    <div classname="px-4 py-4 flex flex-row-reverse space-x-2">
-                        <button onClick={() => setCreateDialogOpen(false)} className={BUTTON_STYLE} >
-                            Cancel
-                        </button>
+                    <div className="px-4 py-4 flex flex-row-reverse space-x-2">
                         <button onClick={handleSumbitCreate} className={GREEN_BUTTON_STYLE} >
                             Create
+                        </button>
+                        <button onClick={() => setCreateDialogOpen(false)} className={BUTTON_STYLE} >
+                            Cancel
                         </button>
                     </div>
                 </DialogPrompt>                    
@@ -246,12 +228,12 @@ const AdminPage = () => {
                         <InputField fieldName="password" isRequired value={selectedUser.password} onChange={e => handleChange(e)} label="Password" />
                         <InputSelect fieldName="role" isDisabled value={selectedUser.role} onChange={e => handleChange(e)} label="Role" options={roleOptions} />
                     </div>
-                    <div classname="px-4 py-4 flex flex-row-reverse space-x-2">
-                        <button onClick={() => setUpdateDialogOpen(false)} className={BUTTON_STYLE}>
-                            Cancel
-                        </button>
+                    <div className="px-4 py-4 flex flex-row-reverse space-x-2">
                         <button onClick={handleSubmitUpdate} className={GREEN_BUTTON_STYLE}>
                             Update
+                        </button>
+                        <button onClick={() => setUpdateDialogOpen(false)} className={BUTTON_STYLE}>
+                            Cancel
                         </button>
                     </div>
                 </DialogPrompt>                    
@@ -260,12 +242,36 @@ const AdminPage = () => {
                 <DialogPrompt>
                     <h2 className="text-xl font-bold text-red-800">Delete {selectedUser.username}?</h2>
                     <p>Delete {selectedUser.username} Permanently?</p>
-                    <div classname="px-4 py-4 flex flex-row-reverse space-x-2">
+                    <div className="px-4 py-4 flex flex-row-reverse space-x-2">
+                        <button onClick={handleSubmitDelete} className={RED_BUTTON_STYLE} >
+                            Delete
+                        </button>
                         <button onClick={() => setDeleteDialogOpen(false)} className={BUTTON_STYLE} >
                             Cancel
                         </button>
-                        <button onClick={handleSubmitDelete} className={RED_BUTTON_STYLE} >
-                            Delete
+                    </div>
+                </DialogPrompt>                    
+            )}
+            { viewDialogOpen && (
+                <DialogPrompt>
+                    <h2 className="text-xl font-bold text-red-800">Viewing {selectedUser.username}'s Images</h2>
+                    <div id="imageListView" className="space-y-2 grid sm:grid-cols-1">
+                        {
+                            userImageList.map((image) => 
+                                <div className="grid grid-cols-4 grid-rows-4 space-x-1">
+                                    <div className="border border-stone-400 bg-white flex-grow row-span-4 col-span-3">
+                                        <img src={image.url} id={image.image_id} />
+                                    </div>
+                                    <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localDate}</div>
+                                    <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">{image.localTime}</div>
+                                    <div className="m-1 p-1 border border-stone-400 bg-white rounded-full flex-none min-w-[120px]">IN</div>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="px-4 py-4 flex flex-row-reverse space-x-2">
+                        <button onClick={() => setViewDialogOpen(false)} className={BUTTON_STYLE} >
+                            Close
                         </button>
                     </div>
                 </DialogPrompt>                    
