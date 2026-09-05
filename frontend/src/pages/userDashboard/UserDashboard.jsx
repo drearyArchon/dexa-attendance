@@ -11,7 +11,6 @@ import DigitalClock from "../../components/clocl/DigitalClock";
 const Dashboard = () => {
     const [imageList, setImageList] = useState([]);
     const [currentStatus, setCurrentStatus] = useState("")
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
     const { token, userData } = useAuth();
@@ -71,15 +70,6 @@ const Dashboard = () => {
         }
     }, []);
 
-    useEffect(() => {
-        console.log(selectedDate);
-    }, [selectedDate])
-
-    const handleDateSelector = (event) => {
-        console.log(event.target.value);
-        setSelectedDate(event.target.value);
-    }
-
     const handleUpload = () => {
         setUploadDialogOpen(true);
     }
@@ -92,7 +82,6 @@ const Dashboard = () => {
 
     const handleFileSelect = (event) => {
         if (event.target.files[0]) {
-            console.log(event.target.files);
             setSelectedImage(event.target.files[0]);
         }
     }

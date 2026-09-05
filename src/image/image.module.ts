@@ -24,7 +24,6 @@ const uploadDir = join(process.cwd(), 'resources');
         }
       }),
       fileFilter: (req, file, cb) => {
-        console.log(file.mimetype);
         if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
           cb(null, true);
         } else {
