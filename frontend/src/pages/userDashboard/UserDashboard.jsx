@@ -100,16 +100,14 @@ const Dashboard = () => {
     return (
         <div className="m-4 p-6 min-h-[90%] min-w-[60%] rounded-lg bg-white shadow-sm space-y-4">
             <h1>Dashboard</h1>
-            <div className="flex space-x-1">
+            <div className="flex space-x-2">
                 <button 
                     onClick={handleUpload} 
                     className={`${currentStatus === 'in' ? RED_BUTTON_STYLE : GREEN_BUTTON_STYLE } flex-none`}
                 >
                     {currentStatus === 'in' ? "Clock Out" : "Clock In"}
                 </button>
-                <div className="border border-stone-400 rounded-md flex-grow">
-                    <DigitalClock />
-                </div>
+                <DigitalClock />
             </div>
             <ImageViewer imageList={imageList} />
             { uploadDialogOpen && (
@@ -130,7 +128,7 @@ const Dashboard = () => {
                             <p>{Math.round(selectedImage.size / 1024)} KB</p>
                         }
                     </div>                
-                    <div className="flex flex-row-reverse space-x-2">
+                    <div className="flex flex-row-reverse space-x-2 space-x-reverse">
                         <button onClick={() => setUploadDialogOpen(false)} className={RED_BUTTON_STYLE}>
                             Cancel
                         </button>
@@ -141,6 +139,7 @@ const Dashboard = () => {
                         >
                             Upload
                         </button>
+                        <DigitalClock />
                     </div>
                 </DialogPrompt>                    
             )}

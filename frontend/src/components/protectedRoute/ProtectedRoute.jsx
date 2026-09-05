@@ -11,14 +11,15 @@ const ProtectedRoute = ({
     const { userData } = useAuth();
     const isAuthenticated = !!userData;
 
-    if (isAuthenticated 
-        && allowedRoles.includes(userData.role)
-        && (userData.exp * 1000 > Date.now())
-    ) {
-        return <>{children}</>;
+    if (isAuthenticated && (userData.exp * 1000 > Date.now())) {
+        if (allowedRoles.includes(userData.role)) {
+            return <>{children}</>
+        }
+        return <Navigate to="/dashboard" />;
     }
 
-    return <><Navigate to="/login" /></>;
+
+    return <Navigate to="/login" />;
 }
 
 export default ProtectedRoute;
